@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import axios from 'axios';
 import {
   StyleSheet,
   Text,
@@ -10,18 +11,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 export default function Login({navigation}) {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const handleSubmit = async () => {
+    axios.post('http://172.20.10.2:6969/login', {username,password}).then((res) => {
+        if(res.status == 200){
+            alert('logged in successfully');
+            navigation.navigate('Home')
+        }
+    }).catch((err) => alert(err))
+  }
   return (
     <View style={styles.container} contentContainerStyle={{minHeight: '100%'}}>
       <Image style={styles.image} source={require("../assets/image.png")} />
-      <StatusBar style="auto" />
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="Email"
+          placeholder="Username"
           placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
+          onChangeText={(email) => setUsername(email)}
         /> 
       </View> 
       <View style={styles.inputView}>
@@ -36,7 +44,7 @@ export default function Login({navigation}) {
       <TouchableOpacity>
         <Text style={styles.forgot_button}>Forgot Password?</Text> 
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity style={styles.loginBtn} onPress={handleSubmit}>
         <Text style={styles.loginText}>Login</Text> 
       </TouchableOpacity> 
       <Text style={styles.dont}>Dont have an account ?</Text>
